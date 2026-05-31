@@ -6,7 +6,7 @@ require('dotenv').config();
 const dbPath = path.resolve(__dirname, '..',
     process.env.DATABASE_URL || 'database.db');
 
-const db = new Database(dbPath, { verbose: console.log });
+const db = new Database(dbPath, { verbose: console.log }); // verbose: console.log means every SQL query gets printed to your terminal 
 
 //creating mock table
 db.exec(`
