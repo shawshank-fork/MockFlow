@@ -9,20 +9,25 @@ const dbPath = path.resolve(__dirname, '..',
 const db = new Database(dbPath, { verbose: console.log }); // verbose: console.log means every SQL query gets printed to your terminal 
 
 //creating mock table
+//response_body and headers are stored as plain text strings, 
+//not actual JSON. So when we save { "username": "jane" }, it goes in as the string '{"username":"jane"}'. 
+//we will use JSON.stringify() before saving and JSON.parse() after reading. 
+//This is because SQLite doesn't have a native JSON column type.
 db.exec(`
   CREATE TABLE IF NOT EXISTS mocks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     path TEXT NOT NULL,
     method TEXT NOT NULL,
     status INTEGER DEFAULT 200,
-    response_body TEXT,          --Will store JSON as string
+    response_body TEXT,          --Will store JSON as string                      
     headers TEXT,                --Will store custom headers JSON as string
     delay_ms INTEGER DEFAULT 0,  -- Artificial response latency in milliseconds
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(path, method)         -- Ensures path + method combinations are unique
   )
 `);
-
+//This is the activity recorder
+//every time someone hits a mock URL, a row gets inserted here.
 db.exec(`
   CREATE TABLE IF NOT EXISTS request_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
