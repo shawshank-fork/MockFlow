@@ -8,9 +8,12 @@ function sleep(ms) {
 }
 
 //Catch-all route: intercepts amy method on any path under /mock/
-router.all('/*', async (req, res) => {
+//router.all means it catches every HTTP method GET, POST, DELETE, anything. 
+//The /* wildcard captures everything after /mock/ and req.params[0] extracts just that dynamic part. 
+//So a request to /mock/users/profile gives mockPath = "users/profile"
+router.all('/*path', async (req, res) => {
     //extract dynamic path after mock
-    const mockPath = req.params[0];
+    const mockPath = req.params.path;
     const method = req.method.toUpperCase();
 
     try {
@@ -65,3 +68,22 @@ router.all('/*', async (req, res) => {
 });
 
 module.exports = router;
+
+
+/*
+The Current Flow 
+
+GET /mock/users/profile
+        ↓
+mock.js catch-all intercepts it
+        ↓
+DB lookup → finds matching mock row
+        ↓
+Logs request into request_logs table
+        ↓
+Waits delay_ms if configured
+        ↓
+Sets custom headers if configured
+        ↓
+Sends back configured status + response body
+*/
