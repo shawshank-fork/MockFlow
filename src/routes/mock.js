@@ -13,7 +13,7 @@ function sleep(ms) {
 //So a request to /mock/users/profile gives mockPath = "users/profile"
 router.all('/*path', async (req, res) => {
     //extract dynamic path after mock
-    const mockPath = req.params.path;
+    const mockPath = req.params.path.join('/');
     const method = req.method.toUpperCase();
 
     try {

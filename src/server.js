@@ -22,5 +22,6 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`MockFlow Server is running on port ${PORT}`);
+    console.log(`MockFlow Server is running on port ${PORT}`); //http://localhost:3000/api/mocks
+
 });
